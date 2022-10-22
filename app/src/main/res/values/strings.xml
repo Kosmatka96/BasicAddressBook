@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Basic Address Book</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Basic Address Book</string>
+    <string name="nav_header_subtitle">by Theodore Kosmatka</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_contact_list">Contact List</string>
+    <string name="menu_create_contact">Create Contact</string>
+    <string name="menu_about">About</string>
+    <string name="menu_dismiss">Dismiss</string>
+    <string name="menu_contact_list_sort">Sort</string>
+    <string name="menu_contact_list_import_contacts">Import All Contacts</string>
+    <string name="menu_contact_list_remove_contacts">Remove All Contacts</string>
+    <string name="menu_contact_list_allow_duplicate">Allow duplicate contacts</string>
+
+    <string name="menu_sort_customer_id">Sort by Customer ID</string>
+    <string name="menu_sort_company_name">Sort by Company Name</string>
+    <string name="menu_sort_contact_name">Sort by Contact Name</string>
+    <string name="menu_sort_contact_title">Sort by Contact Title</string>
+    <string name="menu_sort_address">Sort by Address</string>
+    <string name="menu_sort_city">Sort by City</string>
+    <string name="menu_sort_email">Sort by Email</string>
+    <string name="menu_sort_postal_code">Sort by Postal Code</string>
+    <string name="menu_sort_country">Sort by Country</string>
+    <string name="menu_sort_phone">Sort by Phone</string>
+    <string name="menu_sort_fax">Sort by Fax</string>
+
+    <string name="label_customer_id">Customer ID:</string>
+    <string name="label_company_name">Company Name:</string>
+    <string name="label_contact_name">Contact Name:</string>
+    <string name="label_contact_title">Contact Title:</string>
+    <string name="label_address">Address:</string>
+    <string name="label_city">City:</string>
+    <string name="label_email">Email:</string>
+    <string name="label_postal_code">Postal Code:</string>
+    <string name="label_country">Country:</string>
+    <string name="label_phone">Phone:</string>
+    <string name="label_fax">Fax:</string>
+    <string name="label_dummy_data">Dummy Data Dumm</string>
+
+</resources>

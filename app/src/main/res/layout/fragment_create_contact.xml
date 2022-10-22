@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.createContact.CreateContactFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:cardElevation="20dp"
+            android:textAlignment="center" >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Customer ID   -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_customer_id"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:background="@mipmap/image_green_arrow_foreground"
+                        android:contentDescription="@string/label_dummy_data">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_customer_id" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_customer_id"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Company Name  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_company_name"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_company_name" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_company_name"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Contact Name  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_contact_name"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_contact_name" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_contact_name"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Contact Title  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_contact_title"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_contact_title" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_contact_title"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Address -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_address"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_address" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_address"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- City -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_city"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_city" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_city"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Email -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_email"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_email" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_email"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Postal Code  -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_postalcode"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_postal_code" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_postalcode"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Country -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_country"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_country" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_country"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Phone -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_phone"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_phone" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_phone"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <!-- Fax -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1.0"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_weight="0.04"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <ImageView
+                        android:scaleX="-1"
+                        android:id="@+id/cr_imageview_fax"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/label_dummy_data"
+                        android:background="@mipmap/image_green_arrow_foreground">
+                    </ImageView>
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="@string/label_fax" />
+                    <View
+                        android:layout_weight="0.02"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/cr_textview_fax"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.6"
+                        style="@style/Widget.AppCompat.TextView"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:scrollbars="vertical"
+                        android:text="@string/label_dummy_data" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+
+
+            </LinearLayout>
+
+
+
+
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

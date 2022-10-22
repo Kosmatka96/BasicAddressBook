@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_action_contact_list_sort"
+        android:title="@string/menu_contact_list_sort"
+        android:orderInCategory="1"
+        app:showAsAction="collapseActionView">
+        <menu>
+            <item
+                android:id="@+id/menu_sort_customer_id"
+                android:title="@string/menu_sort_customer_id"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_company_name"
+                android:title="@string/menu_sort_company_name"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_contact_name"
+                android:title="@string/menu_sort_contact_name"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_contact_title"
+                android:title="@string/menu_sort_contact_title"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_address"
+                android:title="@string/menu_sort_address"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_city"
+                android:title="@string/menu_sort_city"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_email"
+                android:title="@string/menu_sort_email"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_postalcode"
+                android:title="@string/menu_sort_postal_code"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_country"
+                android:title="@string/menu_sort_country"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_phone"
+                android:title="@string/menu_sort_phone"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_sort_fax"
+                android:title="@string/menu_sort_fax"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/menu_action_contact_list_allow_duplicates"
+        android:title="@string/menu_contact_list_allow_duplicate"
+        android:orderInCategory="2"
+        app:showAsAction="never" />
+    <item android:id="@+id/menu_action_contact_list_import"
+        android:title="@string/menu_contact_list_import_contacts"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/menu_action_contact_list_remove"
+        android:title="@string/menu_contact_list_remove_contacts"
+        android:orderInCategory="4"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/menu_action_contact_list_dismiss"
+        android:title="@string/menu_dismiss"
+        android:orderInCategory="10"
+        app:showAsAction="never" />
+</menu>
