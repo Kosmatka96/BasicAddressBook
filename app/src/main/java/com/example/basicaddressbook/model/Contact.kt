@@ -1,4 +1,6 @@
-package com.example.basicaddressbook.contact
+package com.example.basicaddressbook.model
+
+// model for the data type to be stored
 
 data class Contact(var customerId : String,
                    var companyName : String,
@@ -10,11 +12,13 @@ data class Contact(var customerId : String,
                    var postalCode : String,
                    var country : String,
                    var phone : String,
-                   var fax : String) {
+                   var fax : String,
+                   var selected: Int) {
 
     companion object {
         fun getEmptyContact() : Contact {
-            return Contact("", "", "", "", "", "", "", "", "", "", "")
+            return Contact("", "", "", "", "", "", "",
+                "", "", "", "", 0)
         }
     }
 

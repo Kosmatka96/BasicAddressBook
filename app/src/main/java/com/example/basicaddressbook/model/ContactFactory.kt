@@ -1,7 +1,8 @@
-package com.example.basicaddressbook.contact
+package com.example.basicaddressbook.model
 
 import android.content.Context
 import android.util.Log
+import com.example.basicaddressbook.database.ContactListTable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.xmlpull.v1.XmlPullParser
@@ -51,13 +52,13 @@ class ContactFactory {
                         ContactListTable.COUNTRY_COL -> contact.country = text
                         ContactListTable.PHONE_COL -> contact.phone = text
                         ContactListTable.FAX_COL -> contact.fax = text
-                        XML_TAG_CONTACT -> if (contact != null) contactList.add(contact)
+                        XML_TAG_CONTACT -> contactList.add(contact)
                     }
                     }
                     event = parser.next()
                 }
 
-                return contactList
+                return contactList.toList()
 
             } catch (e: IOException) {
                 e.printStackTrace()

@@ -1,13 +1,20 @@
 package com.example.basicaddressbook.ui.contactList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.basicaddressbook.model.Contact
 
-class ContactListViewModel : ViewModel() {
+class ContactListViewModel()  : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "There are no Contacts, import to add more"
+    private val _contactListData = MutableLiveData<List<Contact>?>().apply {
+        val emptyList: List<Contact> = emptyList<Contact>()
+        value = emptyList
     }
-    val text: LiveData<String> = _text
+    val contactListData: MutableLiveData<List<Contact>?> = _contactListData
+
+    fun refreshListWithDatabase(currentContactList: List<Contact>?) {
+        contactListData.value = currentContactList
+    }
+
+
+
 }

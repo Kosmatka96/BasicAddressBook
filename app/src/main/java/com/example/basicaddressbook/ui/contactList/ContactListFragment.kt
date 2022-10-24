@@ -1,99 +1,195 @@
 package com.example.basicaddressbook.ui.contactList
 
-import android.content.ContentProvider
-import android.content.ContentValues
-import android.content.Context
-import android.content.res.Configuration
-import android.database.Cursor
+import android.Manifest.permission.CALL_PHONE
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
-import android.widget.ListView
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.cursoradapter.widget.CursorAdapter
-import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
-import com.example.basicaddressbook.PreferenceHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.basicaddressbook.R
-import com.example.basicaddressbook.contact.ContactCursorAdapter
-import com.example.basicaddressbook.contact.ContactFactory
-import com.example.basicaddressbook.contact.ContactListTable
+import com.example.basicaddressbook.adapter.ContactAdapter
+import com.example.basicaddressbook.database.ContactListTable
+import com.example.basicaddressbook.database.PrefHelper
 import com.example.basicaddressbook.databinding.FragmentContactListBinding
-import java.security.Provider
+import com.example.basicaddressbook.model.Contact
+import com.example.basicaddressbook.model.ContactFactory
 
-class ContactListFragment : Fragment(), MenuProvider, LoaderManager.LoaderCallbacks<Cursor> {
-    private var contactListView : ListView? = null
-    private var contactListMissingTextView : TextView? = null
-    private val uri: Uri? = null
-    private lateinit var mPreferences : PreferenceHelper
-    private lateinit var mDataTable : ContactListTable
-    private lateinit var contactCursorAdapter : SimpleCursorAdapter
+class ContactListFragment : Fragment(), MenuProvider {
+
+    companion object {
+        const val MY_PERMISSIONS_REQUEST_CALL_PHONE = 4
+    }
+
+    private val contactViewModel: ContactListViewModel by viewModels()
+    private lateinit var contactTable: ContactListTable
+    private lateinit var prefs: PrefHelper
+    private var toolBar: ActionBar? = null
 
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private val contactAdapter: ContactAdapter = ContactAdapter(null,
+        object : ContactAdapter.ItemClickListener {
+            override fun onItemClick(contact: Contact, position: Int) {
+                clickedContactCard(contact, position)
+            }},
+        object : ContactAdapter.EmailClickListener {
+            override fun onEmailClick(contact: Contact, position: Int) {
+                clickedContactEmail(contact, position)
+            }},
+        object : ContactAdapter.AddressClickListener {
+            override fun onAddressClick(contact: Contact, position: Int) {
+                clickedContactAddress(contact, position)
+            }},
+        object : ContactAdapter.PhoneClickListener {
+            override fun onPhoneClick(contact: Contact, position: Int) {
+                clickedContactPhone(contact, position)
+            }})
 
-        mDataTable = ContactListTable(requireActivity(), null)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        // Init database and user preferences
+        contactTable = ContactListTable(requireContext().applicationContext)
+        prefs = PrefHelper(requireContext().applicationContext)
+
+
+        // bind our ViewModel
+        val contactViewModelProvider = ViewModelProvider(this)[ContactListViewModel::class.java]
+        _binding = FragmentContactListBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        // bind missingTextView that will be shown when there is nothing in the list
+        val missingTextView: TextView = binding.textMissingTextview
+        // bind adapter to our RecyclerView
+        val contactRecyclerView: RecyclerView = binding.recyclerviewContactList
+        contactRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        contactRecyclerView.adapter = contactAdapter
+
+
+        contactViewModelProvider.contactListData.observe(viewLifecycleOwner) {
+            contactAdapter.setNewList(it)
+
+            if(it != null && it.isNotEmpty()) {
+                missingTextView.visibility = View.GONE
+                toolBar?.title = "Contacts (${it.size})"
+            }
+            else {
+                missingTextView.visibility = View.VISIBLE
+                toolBar?.title = "Contacts (0)"
+            }
+        }
+        contactViewModel.refreshListWithDatabase(contactTable.getAllContacts())
 
         // add custom menu
-        val menuHost: MenuHost = requireActivity() as MenuHost
+        val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             this, viewLifecycleOwner, Lifecycle.State.RESUMED
         )
 
-        val homeViewModel =
-            ViewModelProvider(this)[ContactListViewModel::class.java]
-
-        _binding = FragmentContactListBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textMissingTextview
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-
-        // get handle for ListView, init with empty adapter
-        contactListView = activity?.findViewById(R.id.listview_contact_list)
-        contactListMissingTextView = activity?.findViewById(R.id.text_missing_textview)
-
-
-        val uiBindFrom = arrayOf("_id", "CustomerID", "CompanyName", "ContactName", "ContactTitle", "Address", "City", "Email", "PostalCode", "Country", "Phone", "Fax")
-        val uiBindTo = intArrayOf(0, R.id.cell_textview_customer_id, R.id.cell_textview_company_name, R.id.cell_textview_contact_name, R.id.cell_textview_contact_title, R.id.cell_textview_address,
-            R.id.cell_textview_city, R.id.cell_textview_email, R.id.cell_textview_postalcode, R.id.cell_textview_address, R.id.cell_textview_country, R.id.cell_textview_phone, R.id.cell_textview_fax)
-        LoaderManager.getInstance(this)
-        contactCursorAdapter = SimpleCursorAdapter(requireContext(), R.layout.cell_contact, null, uiBindFrom, uiBindTo,
-            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
-        contactListView?.adapter = contactCursorAdapter
-
-        // check for already existing contacts, populate List with them )
-        mPreferences =  PreferenceHelper(requireContext())
-        refreshListWithDatabase()
 
         return root
     }
 
-    private fun refreshListWithDatabase() {
-        LoaderManager.getInstance(this).restartLoader(1, null, this)
+    private fun clickedContactCard(contact: Contact, position: Int) {
+        // toggle selected attribute, which will show as a darkened background on card
+        if(contact.selected == 0) contact.selected = 1
+        else contact.selected = 0
+        var listOfContacts = contactViewModel.contactListData.value?.toMutableList()
+        if (listOfContacts != null) {
+            listOfContacts[position] = contact
+            contactViewModel.refreshListWithDatabase(listOfContacts.toList())
+        }
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.menu_contact_list, menu)
+    private fun clickedContactEmail(contact: Contact, position: Int) {
+        // email contact
+        val email = contact.email
+        if (email.isNotEmpty() && email.isNotBlank()) {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                setDataAndType(Uri.parse("mailto:"), "text/plain")
+                putExtra(Intent.EXTRA_EMAIL, email)
+                putExtra(Intent.EXTRA_SUBJECT, "Contacting Email")
+            }
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                intent.setPackage("com.google.android.gm")
+                startActivity(intent)
+            } else {
+                Log.d("ContactList", "No app available to send email.")
+            }
+        }
     }
 
-    override fun onPrepareMenu(menu: Menu) {
+    private fun clickedContactPhone(contact: Contact, position: Int) {
+        try {
+            // phone contact
+            val phone = contact.phone
+            if (phone.isNotEmpty() && phone.isNotBlank() && !phone.first().equals("0")) {
 
+                val number: Int = phone.toString().toInt()
+                val callIntent = Intent(Intent.ACTION_CALL)
+                callIntent.data = Uri.parse("tel:$number")
+                if (ActivityCompat.checkSelfPermission(requireContext(), CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
+                            CALL_PHONE)) {
+                    } else {
+                        ActivityCompat.requestPermissions(requireActivity(),
+                            arrayOf(CALL_PHONE),
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE)
+                    }
+                }
+                startActivity(callIntent)
+
+                val intent = Intent(Intent.ACTION_CALL);
+                intent.data = Uri.parse("tel:$phone")
+                startActivity(intent)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun clickedContactAddress(contact: Contact, position: Int) {
+        // get directions for contact
+        val address = contact.address
+        if (address.isNotEmpty() && address.isNotBlank()) {
+            val gmmIntentUri = Uri.parse("google.streetview:cbll=$address")
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent)
+        }
+    }
+
+    private fun removeAllContacts() {
+        // drop sql table and clear list
+        contactTable.emptyTable()
+        contactViewModel.refreshListWithDatabase(null)
+    }
+
+    private fun addAllContacts() {
+        // convert locally saved resource file into a list of Contacts, then save those in the database
+        // choose which resource file based off of saved user preferences...
+        if (prefs.loadBoolean(PrefHelper.KEY_PREFER_JSON) == true)
+            contactTable.addListOfContacts(ContactFactory.getContactListFromJSON(requireContext()))
+        else
+            contactTable.addListOfContacts(ContactFactory.getContactListFromXML(requireContext()))
+
+        val updatedList: List<Contact>? = contactTable.getAllContacts()
+        contactViewModel.refreshListWithDatabase(updatedList)
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean = when(item.itemId) {
@@ -110,58 +206,34 @@ class ContactListFragment : Fragment(), MenuProvider, LoaderManager.LoaderCallba
         R.id.menu_sort_country -> true
         R.id.menu_sort_phone -> true
         R.id.menu_sort_fax -> true
-
         R.id.menu_action_contact_list_allow_duplicates -> true
 
-
         R.id.menu_action_contact_list_import -> {
-            // convert locally saved resource file into a list of Contacts, then save those in the database
-            // choose which resource file based off of saved user preferences...
-            if (mPreferences.getValueBoolean(PreferenceHelper.KEY_PREFER_JSON) == true)
-                mDataTable.addListOfContacts(ContactFactory.getContactListFromJSON(requireContext()))
-            else
-                mDataTable.addListOfContacts(ContactFactory.getContactListFromXML(requireContext()))
-
-            refreshListWithDatabase()
-
+            addAllContacts()
             true
         }
 
         R.id.menu_action_contact_list_remove -> {
-            // only remove table if it actually exists
-            val existingListCursor = mDataTable.getAllContactsCursor()
-            if (existingListCursor != null && existingListCursor.moveToFirst()) {
-                // drop sql table and reload table object
-                mDataTable.emptyTable()
-                mDataTable = ContactListTable(requireContext(), null)
-
-                refreshListWithDatabase()
-            }
+            removeAllContacts()
             true
         }
 
         else -> false
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val select : String = "${ContactListTable.ROW_ID} = ${ContactListTable.CUSTOMER_ID_COL}"
-        return CursorLoader(requireContext(), ContactListTable.CONTENT_URI, ContactListTable.keys, select, null, null)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_contact_list, menu)
+        toolBar = (activity as AppCompatActivity).supportActionBar
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-        contactCursorAdapter.swapCursor(data)
-        contactCursorAdapter.notifyDataSetInvalidated()
-
-        // hide/show missing textview depending on if any elements are shown from contacts
-        if ((data != null) && data.moveToFirst())
-            contactListMissingTextView?.visibility = View.GONE
-        else
-            contactListMissingTextView?.visibility = View.VISIBLE
-
+    override fun onPrepareMenu(menu: Menu) {
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        contactCursorAdapter.swapCursor(null)
+    override fun onResume() {
+        super.onResume()
+
+        // ping observer again, as fragment on the initial drawer gets its app bar title rewritten at first
+        contactViewModel.refreshListWithDatabase(contactViewModel.contactListData.value)
     }
 
     override fun onDestroyView() {
