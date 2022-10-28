@@ -13,9 +13,14 @@
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/app_bar_main.xml" value="0.440625" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/cell_contact.xml" value="0.49056603773584906" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/content_main.xml" value="0.3721163490471414" />
+        <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/custom_dialogue.xml" value="0.5578125" />
+        <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/dialogue_3_options.xml" value="0.321875" />
+        <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/dialogue_create_contact_duplicate.xml" value="0.321875" />
+        <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/dialogue_duplicate_contact.xml" value="0.321875" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/fragment_contact_list.xml" value="0.33" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/fragment_create_contact.xml" value="0.45729166666666665" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/fragment_slideshow.xml" value="0.19322916666666667" />
+        <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/item_contact.xml" value="0.31145833333333334" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/layout/nav_header_main.xml" value="0.440625" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/menu/activity_main_drawer.xml" value="0.440625" />
         <entry key="..\:/Users/Computer/AndroidStudioProjects/BasicAddressBook/app/src/main/res/menu/main.xml" value="0.19322916666666667" />

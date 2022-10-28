@@ -31,6 +31,14 @@
     <string name="menu_sort_phone">Sort by Phone</string>
     <string name="menu_sort_fax">Sort by Fax</string>
 
+    <string name="dialogue_contact_ask">Please choose an option for this Contact</string>
+    <string name="dialogue_contact_selected">Contact Selected: %s</string>
+
+    <string name="dialogue_added_contact">Contact Added</string>
+    <string name="dialogue_duplicate_contact">Duplicate Contact found!</string>
+    <string name="dialogue_ask_to_update_or_create_duplicate">Update this contact or create duplicate? (update added to original instance)</string>
+    <string name="dialogue_added_nav_ask">Navigate to contact list?</string>
+
     <string name="label_customer_id">Customer ID:</string>
     <string name="label_company_name">Company Name:</string>
     <string name="label_contact_name">Contact Name:</string>
@@ -44,5 +52,10 @@
     <string name="label_fax">Fax:</string>
     <string name="label_dummy_data">Dummy Data Dumm</string>
     <string name="label_missing_contacts_import_more">There are no Contacts, import to add more</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+    <string name="label_update">Update</string>
+    <string name="label_duplicate">Duplicate</string>
+    <string name="label_delete">Delete</string>
 
 </resources>

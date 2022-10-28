@@ -1,0 +1,70 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/custom_dialogue_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_dummy_data"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/custom_dialogue_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/label_dummy_data"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1.0"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="start"
+                android:id="@+id/btn_yes"
+                android:background="@android:color/white"
+                android:text="@string/label_yes"
+                android:textColor="#5DBCD2"
+                android:textStyle="bold"
+                android:focusable="true"
+                style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:id="@+id/btn_no"
+                android:gravity="end"
+                android:background="@android:color/white"
+                android:text="@string/label_no"
+                android:textColor="#5DBCD2"
+                android:textStyle="bold"
+                android:focusable="true"
+                style="?android:attr/buttonBarButtonStyle" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

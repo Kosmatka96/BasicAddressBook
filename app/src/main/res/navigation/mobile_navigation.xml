@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_contact_list"
-        android:name="com.example.basicaddressbook.ui.contactList.ContactListFragment"
+        android:name="com.example.basicAddressBook.ui.contactList.ContactListFragment"
         android:label="@string/menu_contact_list"
         tools:layout="@layout/fragment_contact_list" />
 
     <fragment
         android:id="@+id/nav_create_contact"
-        android:name="com.example.basicaddressbook.ui.createContact.CreateContactFragment"
+        android:name="com.example.basicAddressBook.ui.createContact.CreateContactFragment"
         android:label="@string/menu_create_contact"
         tools:layout="@layout/fragment_create_contact" />
 </navigation>
