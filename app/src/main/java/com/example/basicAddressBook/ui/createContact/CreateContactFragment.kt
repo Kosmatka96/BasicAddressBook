@@ -26,6 +26,7 @@ import com.example.basicAddressBook.database.ContactListTable
 import com.example.basicAddressBook.database.PrefHelper
 import com.example.basicAddressBook.databinding.FragmentCreateContactBinding
 import com.example.basicAddressBook.model.Contact
+import java.io.Serializable
 
 
 class CreateContactFragment : Fragment(), MenuProvider {
@@ -124,15 +125,8 @@ class CreateContactFragment : Fragment(), MenuProvider {
         }
 
         // if a passed contact was in bundle, reset layout using that contact
-        if (savedInstanceState != null) {
-            var bundledContact: Contact? = null
-            bundledContact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                savedInstanceState.getSerializable(keyBundleContact, Contact::class.java)
-            } else {
-                savedInstanceState.getSerializable(keyBundleContact) as? Contact
-            }
-            if (bundledContact != null) createContactViewModel.resetContact(bundledContact)
-        }
+        val bundledContact: Contact? = arguments?.customGetSerializable(keyBundleContact)
+        if (bundledContact != null) createContactViewModel.resetContact(bundledContact)
 
 
         // add custom menu
@@ -141,6 +135,17 @@ class CreateContactFragment : Fragment(), MenuProvider {
             this, viewLifecycleOwner, Lifecycle.State.RESUMED
         )
         return root
+    }
+
+
+
+    @Suppress("DEPRECATION")
+    inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getSerializable(key, T::class.java)
+        } else {
+            getSerializable(key) as? T
+        }
     }
 
     private fun addContactClicked() {

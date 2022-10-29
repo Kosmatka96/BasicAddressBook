@@ -1,5 +1,5 @@
 package com.example.basicAddressBook.model
-import java.io.Serializable;
+import java.io.Serializable
 
 // model for the data type to be stored
 

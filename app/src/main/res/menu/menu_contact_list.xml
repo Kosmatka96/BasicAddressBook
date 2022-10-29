@@ -10,54 +10,79 @@
             <item
                 android:id="@+id/menu_sort_customer_id"
                 android:title="@string/menu_sort_customer_id"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_company_name"
                 android:title="@string/menu_sort_company_name"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_contact_name"
                 android:title="@string/menu_sort_contact_name"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_contact_title"
                 android:title="@string/menu_sort_contact_title"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_address"
                 android:title="@string/menu_sort_address"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_city"
                 android:title="@string/menu_sort_city"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_email"
                 android:title="@string/menu_sort_email"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_postalcode"
                 android:title="@string/menu_sort_postal_code"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_country"
                 android:title="@string/menu_sort_country"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_phone"
                 android:title="@string/menu_sort_phone"
+                android:checkable="true"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menu_sort_fax"
                 android:title="@string/menu_sort_fax"
+                android:checkable="true"
                 app:showAsAction="never" />
         </menu>
     </item>
 
-    <item android:id="@+id/menu_action_contact_list_allow_duplicates"
-        android:title="@string/menu_contact_list_allow_duplicate"
-        android:orderInCategory="2"
-        app:showAsAction="never" />
+    <item android:id="@+id/menu_action_contact_list_import_style"
+        android:title="@string/menu_contact_list_import_style"
+        android:orderInCategory="1"
+        app:showAsAction="collapseActionView">
+        <menu>
+            <item
+                android:id="@+id/menu_import_style_xml"
+                android:title="@string/menu_contact_list_import_xml"
+                android:checkable="true"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_import_style_json"
+                android:title="@string/menu_contact_list_import_json"
+                android:checkable="true"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
     <item android:id="@+id/menu_action_contact_list_import"
         android:title="@string/menu_contact_list_import_contacts"
         android:orderInCategory="3"

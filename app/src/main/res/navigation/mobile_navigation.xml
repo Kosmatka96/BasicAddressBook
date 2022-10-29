@@ -15,5 +15,7 @@
         android:id="@+id/nav_create_contact"
         android:name="com.example.basicAddressBook.ui.createContact.CreateContactFragment"
         android:label="@string/menu_create_contact"
-        tools:layout="@layout/fragment_create_contact" />
+        tools:layout="@layout/fragment_create_contact">
+    </fragment>
+
 </navigation>

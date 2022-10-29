@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -40,27 +41,41 @@ class ContactListFragment : Fragment(), MenuProvider {
     private val contactViewModel: ContactListViewModel by viewModels()
     private lateinit var contactTable: ContactListTable
     private lateinit var prefs: PrefHelper
-    private var toolBar: ActionBar? = null
 
+    private lateinit var menuItemImportXML: MenuItem
+    private lateinit var menuItemImportJSON: MenuItem
+    private lateinit var menuItemSortCustomerId: MenuItem
+    private lateinit var menuItemSortCompanyName: MenuItem
+    private lateinit var menuItemSortContactName: MenuItem
+    private lateinit var menuItemSortAddress: MenuItem
+    private lateinit var menuItemSortContactTitle: MenuItem
+    private lateinit var menuItemSortCity: MenuItem
+    private lateinit var menuItemSortEmail: MenuItem
+    private lateinit var menuItemSortPostalCode: MenuItem
+    private lateinit var menuItemSortCountry: MenuItem
+    private lateinit var menuItemSortPhone: MenuItem
+    private lateinit var menuItemSortFax: MenuItem
+
+    private var toolBar: ActionBar? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
 
     private val contactAdapter: ContactAdapter = ContactAdapter(null,
         object : ContactAdapter.ItemClickListener {
-            override fun onItemClick(contact: Contact, position: Int) {
-                clickedContactCard(contact, position)
+            override fun onItemClick(contact: Contact) {
+                clickedContactCard(contact)
             }},
         object : ContactAdapter.EmailClickListener {
-            override fun onEmailClick(contact: Contact, position: Int) {
-                clickedContactEmail(contact, position)
+            override fun onEmailClick(contact: Contact) {
+                clickedContactEmail(contact)
             }},
         object : ContactAdapter.AddressClickListener {
-            override fun onAddressClick(contact: Contact, position: Int) {
-                clickedContactAddress(contact, position)
+            override fun onAddressClick(contact: Contact) {
+                clickedContactAddress(contact)
             }},
         object : ContactAdapter.PhoneClickListener {
-            override fun onPhoneClick(contact: Contact, position: Int) {
-                clickedContactPhone(contact, position)
+            override fun onPhoneClick(contact: Contact) {
+                clickedContactPhone(contact)
             }})
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -94,7 +109,7 @@ class ContactListFragment : Fragment(), MenuProvider {
                 toolBar?.title = "Contacts (0)"
             }
         }
-        contactViewModel.refreshListWithDatabase(contactTable.getAllContacts())
+        refreshContactList()
 
         // add custom menu
         val menuHost: MenuHost = requireActivity()
@@ -106,7 +121,7 @@ class ContactListFragment : Fragment(), MenuProvider {
         return root
     }
 
-    private fun clickedContactCard(contact: Contact, position: Int) {
+    private fun clickedContactCard(contact: Contact) {
         // show options menu to edit or delete contact
 
         // display dialogue asking user if they want to update or delete this contact
@@ -135,8 +150,7 @@ class ContactListFragment : Fragment(), MenuProvider {
             dialog.dismiss()
             // delete this specific instance and refresh list
             contactTable.deleteWithRow(contact.groupId)
-            val updatedList: List<Contact>? = contactTable.getAllContacts()
-            contactViewModel.refreshListWithDatabase(updatedList)
+            refreshContactList()
         }
         dismissBtn.setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -153,7 +167,7 @@ class ContactListFragment : Fragment(), MenuProvider {
         */
     }
 
-    private fun clickedContactEmail(contact: Contact, position: Int) {
+    private fun clickedContactEmail(contact: Contact) {
         // email contact
         val email = contact.email
         if (email.isNotEmpty() && email.isNotBlank()) {
@@ -172,13 +186,13 @@ class ContactListFragment : Fragment(), MenuProvider {
         }
     }
 
-    private fun clickedContactPhone(contact: Contact, position: Int) {
+    private fun clickedContactPhone(contact: Contact) {
         try {
             // phone contact
             val phone = contact.phone
             if (phone.isNotEmpty() && phone.isNotBlank() && phone.first() != '0') {
 
-                val number: Int = phone.toString().toInt()
+                val number: Int = phone.toInt()
                 val callIntent = Intent(Intent.ACTION_CALL)
                 callIntent.data = Uri.parse("tel:$number")
                 if (ActivityCompat.checkSelfPermission(requireContext(), CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -192,7 +206,7 @@ class ContactListFragment : Fragment(), MenuProvider {
                 }
                 startActivity(callIntent)
 
-                val intent = Intent(Intent.ACTION_CALL);
+                val intent = Intent(Intent.ACTION_CALL)
                 intent.data = Uri.parse("tel:$phone")
                 startActivity(intent)
             }
@@ -201,14 +215,14 @@ class ContactListFragment : Fragment(), MenuProvider {
         }
     }
 
-    private fun clickedContactAddress(contact: Contact, position: Int) {
+    private fun clickedContactAddress(contact: Contact) {
         // get directions for contact
         val address = contact.address
         if (address.isNotEmpty() && address.isNotBlank()) {
             val gmmIntentUri = Uri.parse("google.streetview:cbll=$address")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
 
-            mapIntent.setPackage("com.google.android.apps.maps");
+            mapIntent.setPackage("com.google.android.apps.maps")
             startActivity(mapIntent)
         }
     }
@@ -220,38 +234,97 @@ class ContactListFragment : Fragment(), MenuProvider {
     }
 
     private fun addAllContacts() {
-        // convert locally saved resource file into a list of Contacts, then save those in the database
-        // choose which resource file based off of saved user preferences...
-        if (prefs.loadBoolean(PrefHelper.KEY_PREFER_JSON) == true)
-            contactTable.addListOfContacts(ContactFactory.getContactListFromJSON(requireContext()))
-        else
-            contactTable.addListOfContacts(ContactFactory.getContactListFromXML(requireContext()))
+        // import contacts using saved input preference (json/xml) into database
+        val importedContacts =
+            if (prefs.loadBoolean(PrefHelper.KEY_PREFER_JSON)) ContactFactory.getContactListFromJSON(requireContext())
+            else ContactFactory.getContactListFromXML(requireContext())
+        contactTable.addListOfContacts(importedContacts)
 
-        val updatedList: List<Contact>? = contactTable.getAllContacts()
+        refreshContactList()
+    }
+
+    private fun refreshContactList() {
+        // refresh list with updated contacts in database
+        val updatedList: List<Contact>? = contactTable.getAllContacts(prefs.loadString(PrefHelper.KEY_PREFERRED_SORTING_METHOD))
         contactViewModel.refreshListWithDatabase(updatedList)
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean = when(item.itemId) {
-        // Still was going to finish this up with selecting and tailoring the ListView based on user preferences....
-        R.id.menu_action_contact_list_sort -> true
-        R.id.menu_sort_customer_id -> true
-        R.id.menu_sort_company_name -> true
-        R.id.menu_sort_contact_name -> true
-        R.id.menu_sort_address -> true
-        R.id.menu_sort_contact_title -> true
-        R.id.menu_sort_city -> true
-        R.id.menu_sort_email -> true
-        R.id.menu_sort_postalcode -> true
-        R.id.menu_sort_country -> true
-        R.id.menu_sort_phone -> true
-        R.id.menu_sort_fax -> true
-        R.id.menu_action_contact_list_allow_duplicates -> true
 
+        // Contact sorting options
+        R.id.menu_sort_customer_id -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.CUSTOMER_ID_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_company_name -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.COMPANY_NAME_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_contact_name -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.CONTACT_NAME_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_address -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.ADDRESS_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_contact_title -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.CONTACT_TITLE_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_city -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.CITY_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_email -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.EMAIL_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_postalcode -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.POSTAL_CODE_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_country -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.COUNTRY_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_phone -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.PHONE_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+        R.id.menu_sort_fax -> {
+            prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.FAX_COL)
+            updateCheckedSortingMenuItems()
+            true
+        }
+
+        // Import Style options
+        R.id.menu_import_style_xml -> {
+            prefs.save(PrefHelper.KEY_PREFER_JSON, false)
+            updateCheckedImportStyleMenuItems()
+            true
+        }
+        R.id.menu_import_style_json -> {
+            prefs.save(PrefHelper.KEY_PREFER_JSON, true)
+            updateCheckedImportStyleMenuItems()
+            true
+        }
+
+        // Import/Export options
         R.id.menu_action_contact_list_import -> {
             addAllContacts()
             true
         }
-
         R.id.menu_action_contact_list_remove -> {
             removeAllContacts()
             true
@@ -263,6 +336,72 @@ class ContactListFragment : Fragment(), MenuProvider {
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_contact_list, menu)
         toolBar = (activity as AppCompatActivity).supportActionBar
+
+        // init import style menu options
+        menuItemImportXML = menu.findItem(R.id.menu_import_style_xml)
+        menuItemImportJSON = menu.findItem(R.id.menu_import_style_json)
+        updateCheckedImportStyleMenuItems()
+
+        // init contact sorting menu options
+        menuItemSortCustomerId = menu.findItem(R.id.menu_sort_customer_id)
+        menuItemSortCompanyName= menu.findItem(R.id.menu_sort_company_name)
+        menuItemSortContactName= menu.findItem(R.id.menu_sort_contact_name)
+        menuItemSortAddress= menu.findItem(R.id.menu_sort_address)
+        menuItemSortContactTitle= menu.findItem(R.id.menu_sort_contact_title)
+        menuItemSortCity= menu.findItem(R.id.menu_sort_city)
+        menuItemSortEmail= menu.findItem(R.id.menu_sort_email)
+        menuItemSortPostalCode= menu.findItem(R.id.menu_sort_postalcode)
+        menuItemSortCountry= menu.findItem(R.id.menu_sort_country)
+        menuItemSortPhone= menu.findItem(R.id.menu_sort_phone)
+        menuItemSortFax= menu.findItem(R.id.menu_sort_fax)
+        updateCheckedSortingMenuItems()
+
+    }
+
+    private fun isSortingSetAs(sortBy: String) : Boolean {
+        return (prefs.loadString(PrefHelper.KEY_PREFERRED_SORTING_METHOD).equals(sortBy))
+    }
+
+    private fun updateCheckedSortingMenuItems() {
+        // uncheck all sorting options
+        menuItemSortCustomerId.isChecked = false
+        menuItemSortCompanyName.isChecked = false
+        menuItemSortContactName.isChecked = false
+        menuItemSortAddress.isChecked = false
+        menuItemSortContactTitle.isChecked = false
+        menuItemSortCity.isChecked = false
+        menuItemSortEmail.isChecked = false
+        menuItemSortEmail.isChecked = false
+        menuItemSortPostalCode.isChecked = false
+        menuItemSortCountry.isChecked = false
+        menuItemSortPhone.isChecked = false
+        menuItemSortFax.isChecked = false
+
+        // using shared preferences, update the checked sorting option to match saved preference
+        if (isSortingSetAs(ContactListTable.CUSTOMER_ID_COL)) menuItemSortCustomerId.isChecked = true
+        else if (isSortingSetAs(ContactListTable.COMPANY_NAME_COL)) menuItemSortCompanyName.isChecked = true
+        else if (isSortingSetAs(ContactListTable.CONTACT_NAME_COL)) menuItemSortContactName.isChecked = true
+        else if (isSortingSetAs(ContactListTable.ADDRESS_COL)) menuItemSortAddress.isChecked = true
+        else if (isSortingSetAs(ContactListTable.CONTACT_TITLE_COL)) menuItemSortContactTitle.isChecked = true
+        else if (isSortingSetAs(ContactListTable.CITY_COL)) menuItemSortCity.isChecked = true
+        else if (isSortingSetAs(ContactListTable.EMAIL_COL)) menuItemSortEmail.isChecked = true
+        else if (isSortingSetAs(ContactListTable.POSTAL_CODE_COL)) menuItemSortPostalCode.isChecked = true
+        else if (isSortingSetAs(ContactListTable.COUNTRY_COL)) menuItemSortCountry.isChecked = true
+        else if (isSortingSetAs(ContactListTable.PHONE_COL)) menuItemSortPhone.isChecked = true
+        else if (isSortingSetAs(ContactListTable.FAX_COL)) menuItemSortFax.isChecked = true
+
+        refreshContactList()
+    }
+
+    private fun updateCheckedImportStyleMenuItems() {
+        if (prefs.loadBoolean(PrefHelper.KEY_PREFER_JSON)) {
+            menuItemImportXML.isChecked = false
+            menuItemImportJSON.isChecked = true
+        }
+        else {
+            menuItemImportXML.isChecked = true
+            menuItemImportJSON.isChecked = false
+        }
     }
 
     override fun onPrepareMenu(menu: Menu) {

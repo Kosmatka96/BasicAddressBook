@@ -39,9 +39,9 @@ abstract class AbstractTable(context: Context) {
         db?.delete(tableName, null, null)
     }
 
-    fun getCursorFromDatabase(where: String?) : Cursor? {
+    fun getCursorFromDatabase(where: String?, orderBy: String? = null) : Cursor? {
         if (db == null) db = dbHelper?.readableDatabase
-        return db?.query(tableName, keys, where, null, null, null, null)
+        return db?.query(tableName, keys, where, null, null, null, orderBy)
     }
 
     fun insertOrUpdate(select: String, newContentValues: ContentValues) {

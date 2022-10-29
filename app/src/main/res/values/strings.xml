@@ -15,7 +15,9 @@
     <string name="menu_contact_list_sort">Sort</string>
     <string name="menu_contact_list_import_contacts">Import All Contacts</string>
     <string name="menu_contact_list_remove_contacts">Remove All Contacts</string>
-    <string name="menu_contact_list_allow_duplicate">Allow duplicate contacts</string>
+    <string name="menu_contact_list_import_style">Import Style</string>
+    <string name="menu_contact_list_import_xml">Import as XML</string>
+    <string name="menu_contact_list_import_json">Import as JSON</string>
     <string name="menu_create_contact_add">Add Contact</string>
     <string name="menu_create_contact_reset">Reset Entry</string>
 

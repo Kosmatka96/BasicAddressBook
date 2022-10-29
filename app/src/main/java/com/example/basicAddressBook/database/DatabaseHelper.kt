@@ -32,10 +32,8 @@ class DatabaseHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         fun getColumnValueAsString(columnName: String, cursor: Cursor) : String {
-            var value = ""
             val columnIndex = cursor.getColumnIndex(columnName)
-            value = cursor.getString(columnIndex)
-            return value
+            return cursor.getString(columnIndex)
         }
 
         fun getColumnValueAsInt(columnName: String, cursor: Cursor) : Int {

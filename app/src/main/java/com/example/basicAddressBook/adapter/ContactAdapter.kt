@@ -73,16 +73,16 @@ class ContactAdapter(
     }
 
     interface ItemClickListener {
-        fun onItemClick(contact: Contact, position: Int)
+        fun onItemClick(contact: Contact)
     }
     interface EmailClickListener {
-        fun onEmailClick(contact: Contact, position: Int)
+        fun onEmailClick(contact: Contact)
     }
     interface AddressClickListener {
-        fun onAddressClick(contact: Contact, position: Int)
+        fun onAddressClick(contact: Contact)
     }
     interface PhoneClickListener {
-        fun onPhoneClick(contact: Contact, position: Int)
+        fun onPhoneClick(contact: Contact)
     }
 
     override fun getItemCount(): Int {
@@ -96,19 +96,19 @@ class ContactAdapter(
 
                 holder.itemView.setOnClickListener {
                     animateView(holder.itemView)
-                    itemClickListener.onItemClick(contactList, position)
+                    itemClickListener.onItemClick(contactList)
                 }
                 holder.addressTextView.setOnClickListener {
                     animateView(holder.addressTextView)
-                    addressClickListener.onAddressClick(contactList, position)
+                    addressClickListener.onAddressClick(contactList)
                 }
                 holder.emailTextView.setOnClickListener {
                     animateView(holder.emailTextView)
-                    emailClickListener.onEmailClick(contactList, position)
+                    emailClickListener.onEmailClick(contactList)
                 }
                 holder.phoneTextView.setOnClickListener {
                     animateView(holder.phoneTextView)
-                    phoneClickListener.onPhoneClick(contactList, position)
+                    phoneClickListener.onPhoneClick(contactList)
                 }
             }
         }

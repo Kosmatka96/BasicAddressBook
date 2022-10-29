@@ -82,9 +82,16 @@ class ContactListTable(context: Context) : AbstractTable(context) {
         EMAIL_COL, POSTAL_CODE_COL, COUNTRY_COL, PHONE_COL, FAX_COL, SELECTED_COL)
 
 
-    fun getAllContacts(): List<Contact>? {
+    fun getAllContacts(sortBy: String?): List<Contact>? {
+
+        // build orderBy clause based on passed sorting
+        var orderBy: String? = null
+        if (!sortBy.isNullOrBlank()) {
+            orderBy = "$sortBy ASC"
+        }
+
         // get all data from our database
-        val cursor =  getCursorFromDatabase(null)
+        val cursor =  getCursorFromDatabase(null, orderBy)
         if (cursor != null && cursor.moveToFirst()) {
             val listAsObjects = getCursorListAsObjects(cursor)
             cursor.close()
