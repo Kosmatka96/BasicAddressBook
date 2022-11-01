@@ -33,6 +33,18 @@
     <string name="menu_sort_phone">Sort by Phone</string>
     <string name="menu_sort_fax">Sort by Fax</string>
 
+    <string name="filter_customer_id">Filter by Customer ID</string>
+    <string name="filter_company_name">Filter by Company Name</string>
+    <string name="filter_contact_name">Filter by Contact Name</string>
+    <string name="filter_contact_title">Filter by Contact Title</string>
+    <string name="filter_address">Filter by Address</string>
+    <string name="filter_city">Filter by City</string>
+    <string name="filter_email">Filter by Email</string>
+    <string name="filter_postal_code">Filter by Postal Code</string>
+    <string name="filter_country">Filter by Country</string>
+    <string name="filter_phone">Filter by Phone</string>
+    <string name="filter_fax">Filter by Fax</string>
+
     <string name="dialogue_contact_ask">Please choose an option for this Contact</string>
     <string name="dialogue_contact_selected">Contact Selected: %s</string>
 

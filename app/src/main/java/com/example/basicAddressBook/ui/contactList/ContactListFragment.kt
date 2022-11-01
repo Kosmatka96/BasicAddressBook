@@ -1,18 +1,23 @@
 package com.example.basicAddressBook.ui.contactList
 
 import android.Manifest.permission.CALL_PHONE
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -39,9 +44,12 @@ class ContactListFragment : Fragment(), MenuProvider {
     }
 
     private val contactViewModel: ContactListViewModel by viewModels()
+    private var toolBar: ActionBar? = null
     private lateinit var contactTable: ContactListTable
     private lateinit var prefs: PrefHelper
+    private lateinit var searchView: SearchView
 
+    // menu sort options
     private lateinit var menuItemImportXML: MenuItem
     private lateinit var menuItemImportJSON: MenuItem
     private lateinit var menuItemSortCustomerId: MenuItem
@@ -56,7 +64,6 @@ class ContactListFragment : Fragment(), MenuProvider {
     private lateinit var menuItemSortPhone: MenuItem
     private lateinit var menuItemSortFax: MenuItem
 
-    private var toolBar: ActionBar? = null
     private var _binding: FragmentContactListBinding? = null
     private val binding get() = _binding!!
 
@@ -96,6 +103,20 @@ class ContactListFragment : Fragment(), MenuProvider {
         contactRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         contactRecyclerView.adapter = contactAdapter
 
+        // bind searchView and setup to sort when input detected, based off current sorting preference
+        searchView = binding.contactListSearch
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterContactList(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterContactList(newText)
+                return false
+            }
+        })
+
 
         contactViewModelProvider.contactListData.observe(viewLifecycleOwner) {
             contactAdapter.setNewList(it)
@@ -119,6 +140,18 @@ class ContactListFragment : Fragment(), MenuProvider {
 
 
         return root
+    }
+
+    private fun filterContactList(where: String?) {
+        // refresh list with updated contacts in database
+        val filteredList: List<Contact>? = contactTable.getFilteredContacts(where, prefs.loadString(PrefHelper.KEY_PREFERRED_SORTING_METHOD))
+        contactViewModel.refreshListWithDatabase(filteredList)
+    }
+
+    private fun refreshContactList() {
+        // refresh list with updated contacts in database
+        val updatedList: List<Contact>? = contactTable.getAllContacts(prefs.loadString(PrefHelper.KEY_PREFERRED_SORTING_METHOD))
+        contactViewModel.refreshListWithDatabase(updatedList)
     }
 
     private fun clickedContactCard(contact: Contact) {
@@ -156,6 +189,8 @@ class ContactListFragment : Fragment(), MenuProvider {
         dialog.show()
 
         /*
+        // This turned out to be extra stuff.... wanted to make fancy multiple selection operations...
+
         // toggle selected attribute, which will show as a darkened background on card
         if(contact.selected == 0) contact.selected = 1
         else contact.selected = 0
@@ -243,15 +278,19 @@ class ContactListFragment : Fragment(), MenuProvider {
         refreshContactList()
     }
 
-    private fun refreshContactList() {
-        // refresh list with updated contacts in database
-        val updatedList: List<Contact>? = contactTable.getAllContacts(prefs.loadString(PrefHelper.KEY_PREFERRED_SORTING_METHOD))
-        contactViewModel.refreshListWithDatabase(updatedList)
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean = when(item.itemId) {
 
         // Contact sorting options
+        R.id.menu_action_contact_list_sort -> {
+            view?.let { activity?.hideKeyboard(it) }
+            true
+        }
+
         R.id.menu_sort_customer_id -> {
             prefs.save(PrefHelper.KEY_PREFERRED_SORTING_METHOD, ContactListTable.CUSTOMER_ID_COL)
             updateCheckedSortingMenuItems()
@@ -378,17 +417,54 @@ class ContactListFragment : Fragment(), MenuProvider {
         menuItemSortFax.isChecked = false
 
         // using shared preferences, update the checked sorting option to match saved preference
-        if (isSortingSetAs(ContactListTable.CUSTOMER_ID_COL)) menuItemSortCustomerId.isChecked = true
-        else if (isSortingSetAs(ContactListTable.COMPANY_NAME_COL)) menuItemSortCompanyName.isChecked = true
-        else if (isSortingSetAs(ContactListTable.CONTACT_NAME_COL)) menuItemSortContactName.isChecked = true
-        else if (isSortingSetAs(ContactListTable.ADDRESS_COL)) menuItemSortAddress.isChecked = true
-        else if (isSortingSetAs(ContactListTable.CONTACT_TITLE_COL)) menuItemSortContactTitle.isChecked = true
-        else if (isSortingSetAs(ContactListTable.CITY_COL)) menuItemSortCity.isChecked = true
-        else if (isSortingSetAs(ContactListTable.EMAIL_COL)) menuItemSortEmail.isChecked = true
-        else if (isSortingSetAs(ContactListTable.POSTAL_CODE_COL)) menuItemSortPostalCode.isChecked = true
-        else if (isSortingSetAs(ContactListTable.COUNTRY_COL)) menuItemSortCountry.isChecked = true
-        else if (isSortingSetAs(ContactListTable.PHONE_COL)) menuItemSortPhone.isChecked = true
-        else if (isSortingSetAs(ContactListTable.FAX_COL)) menuItemSortFax.isChecked = true
+        // update hint in search, to show show user what they are filtering by
+        if (isSortingSetAs(ContactListTable.CUSTOMER_ID_COL)) {
+            menuItemSortCustomerId.isChecked = true
+            searchView.queryHint = getString(R.string.filter_customer_id)
+        }
+        else if (isSortingSetAs(ContactListTable.COMPANY_NAME_COL)) {
+            menuItemSortCompanyName.isChecked = true
+            searchView.queryHint = getString(R.string.filter_company_name)
+        }
+        else if (isSortingSetAs(ContactListTable.CONTACT_NAME_COL)) {
+            menuItemSortContactName.isChecked = true
+            searchView.queryHint = getString(R.string.filter_contact_name)
+        }
+        else if (isSortingSetAs(ContactListTable.ADDRESS_COL)) {
+            menuItemSortAddress.isChecked = true
+            searchView.queryHint = getString(R.string.filter_address)
+        }
+        else if (isSortingSetAs(ContactListTable.CONTACT_TITLE_COL)) {
+            menuItemSortContactTitle.isChecked = true
+            searchView.queryHint = getString(R.string.filter_contact_title)
+        }
+        else if (isSortingSetAs(ContactListTable.CITY_COL)) {
+            menuItemSortCity.isChecked = true
+            searchView.queryHint = getString(R.string.filter_city)
+        }
+        else if (isSortingSetAs(ContactListTable.EMAIL_COL)) {
+            menuItemSortEmail.isChecked = true
+            searchView.queryHint = getString(R.string.filter_email)
+        }
+        else if (isSortingSetAs(ContactListTable.POSTAL_CODE_COL)) {
+            menuItemSortPostalCode.isChecked = true
+            searchView.queryHint = getString(R.string.filter_postal_code)
+        }
+        else if (isSortingSetAs(ContactListTable.COUNTRY_COL)) {
+            menuItemSortCountry.isChecked = true
+            searchView.queryHint = getString(R.string.filter_country)
+        }
+        else if (isSortingSetAs(ContactListTable.PHONE_COL)) {
+            menuItemSortPhone.isChecked = true
+            searchView.queryHint = getString(R.string.filter_phone)
+        }
+        else if (isSortingSetAs(ContactListTable.FAX_COL)) {
+            menuItemSortFax.isChecked = true
+            searchView.queryHint = getString(R.string.filter_fax)
+        }
+
+        // clear out entered filter
+        searchView.setQuery("", true)
 
         refreshContactList()
     }

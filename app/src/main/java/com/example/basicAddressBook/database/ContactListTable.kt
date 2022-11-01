@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.provider.ContactsContract.Data
 import android.util.Log
 import com.example.basicAddressBook.model.Contact
 
@@ -92,6 +93,37 @@ class ContactListTable(context: Context) : AbstractTable(context) {
 
         // get all data from our database
         val cursor =  getCursorFromDatabase(null, orderBy)
+        if (cursor != null && cursor.moveToFirst()) {
+            val listAsObjects = getCursorListAsObjects(cursor)
+            cursor.close()
+            return listAsObjects
+        }
+        return null
+    }
+
+    fun getFilteredContacts(_where: String?, sortBy: String?): List<Contact>? {
+        var where = _where
+
+        // build orderBy and where clause based on passed sorting
+        var orderBy: String? = null
+        if (!sortBy.isNullOrBlank()) {
+            // use sort category to build where clause
+            // do before converting sort category into orderBy clause
+            if (where != null && where.isNotEmpty()) {
+                where += "%";
+                where = "$sortBy LIKE ${DatabaseUtils.sqlEscapeString(where)}"
+            }
+
+            // use sortBy to build orderBy clause
+            orderBy = "$sortBy ASC"
+        }
+        else {
+            // cannot filter without a filterable category set
+            where = null
+        }
+
+        // get filtered data based on where clause from our database
+        val cursor =  getCursorFromDatabase(where, orderBy)
         if (cursor != null && cursor.moveToFirst()) {
             val listAsObjects = getCursorListAsObjects(cursor)
             cursor.close()

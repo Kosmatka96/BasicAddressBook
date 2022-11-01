@@ -7,35 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".ui.contactList.ContactListFragment" >
 
-
-
-    <RelativeLayout
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_contact_list"
-            android:paddingTop = "10dp"
-            android:paddingBottom = "10dp"
+        <SearchView
+            android:iconifiedByDefault="false"
+            android:id="@+id/contact_list_search"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-        </androidx.recyclerview.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/text_missing_textview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/label_missing_contacts_import_more"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_contact_list"
+                android:paddingTop = "10dp"
+                android:paddingBottom = "10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </androidx.recyclerview.widget.RecyclerView>
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/text_missing_textview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/label_missing_contacts_import_more"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
